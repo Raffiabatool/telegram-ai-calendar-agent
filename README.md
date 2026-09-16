@@ -4,8 +4,7 @@ An AI-powered Telegram bot that lets you **view, create, and update your Google 
 
 Built with **n8n**, **Google Gemini**, and the **Google Calendar API**.
 
-![Workflow Diagram](screenshots/workflow-diagram.png)
-
+image_4bb21ba (1).jpg
 ---
 
 ## 📌 Overview
