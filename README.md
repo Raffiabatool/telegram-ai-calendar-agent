@@ -7,7 +7,7 @@ Built with **n8n**, **Google Gemini**, and the **Google Calendar API**.
 ---
 ###  Project Screenshots
 
-* 🔗 [View Bot Welcome Screen](assets/2jpeg)
+* 🔗 [View Bot Welcome Screen](assets/2.jpeg.jpg)
 * 🔗 [View n8n Workflow Architecture](assets/image_4bb21ba%20(1).jpg)
 * 🔗 [View LinkedIn Demo Screenshot](assets/linkedin2.PNG)
 ##  Overview
