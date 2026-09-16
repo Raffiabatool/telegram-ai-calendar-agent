@@ -1,19 +1,22 @@
-# 🤖 AI Calendar Assistant — Telegram Bot with n8n
+# AI Calendar Assistant — Telegram Bot with n8n
 
 An AI-powered Telegram bot that lets you **view, create, and update your Google Calendar events** just by chatting in plain language. No need to open the Calendar app — just send a message on Telegram, and the AI Agent handles the rest.
 
 Built with **n8n**, **Google Gemini**, and the **Google Calendar API**.
 
-image_4bb21ba (1).jpg
 ---
+###  Project Screenshots
 
-## 📌 Overview
+* 🔗 [View Bot Welcome Screen](assets/2jpeg)
+* 🔗 [View n8n Workflow Architecture](assets/image_4bb21ba%20(1).jpg)
+* 🔗 [View LinkedIn Demo Screenshot](assets/linkedin2.PNG)
+##  Overview
 
 This project is an automated workflow (built in n8n) that connects **Telegram** to **Google Calendar** through an **AI Agent**. The agent understands natural language requests and decides which calendar action to perform — checking your schedule, adding a new event, or updating an existing one — then replies back to you on Telegram.
 
 ---
 
-## ✨ Features
+##  Features
 
 - 💬 **Chat naturally** — talk to your calendar like you're texting a friend
 - 📅 **View events** — ask what's on your schedule
@@ -24,7 +27,7 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Component            | Tool / Service          |
 |-----------------------|--------------------------|
@@ -35,7 +38,7 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 
 ---
 
-## 🧩 How It Works
+##  How It Works
 
 1. **Telegram Trigger** — listens for new incoming messages from the user
 2. **Normalize Input** — cleans and formats the message before it reaches the AI
@@ -50,7 +53,7 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 
 ---
 
-## ⚙️ Setup & Installation
+##  Setup & Installation
 
 1. **Import the workflow**
    - Download `workflow.json` from this repo (or copy it) and import it into your n8n instance.
@@ -67,7 +70,7 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 
 ---
 
-## 💡 Example Commands
+##  Example Commands
 
 - "What's on my calendar tomorrow?"
 - "Schedule a meeting with Ali at 3 PM on Friday."
@@ -75,7 +78,7 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 
 ---
 
-## 🚀 Future Improvements
+##  Future Improvements
 
 - Add a "delete event" tool
 - Support multiple calendars (work / personal)
@@ -84,12 +87,12 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 
 ---
 
-## 📄 License
+##  License
 
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-## 🙌 Author
+##  Author
 
 Built by **[Raffia Batool]** — feel free to connect or contribute!
