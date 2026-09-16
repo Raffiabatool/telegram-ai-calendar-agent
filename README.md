@@ -54,11 +54,14 @@ This project is an automated workflow (built in n8n) that connects **Telegram** 
 4. **Send a Text Message** — sends the AI Agent's reply back to the user on Telegram
 
 ---
+### n8n Workflow Configuration
+*  [Download Telegram AI Calendar Agent JSON](telegram-ai-calendar-agent.json)
 
 ##  Setup & Installation
 
 1. **Import the workflow**
    - Download `workflow.json` from this repo (or copy it) and import it into your n8n instance.
+
 2. **Create a Telegram Bot**
    - Talk to [@BotFather](https://t.me/BotFather) on Telegram and create a new bot to get a bot token.
 3. **Connect credentials in n8n**
