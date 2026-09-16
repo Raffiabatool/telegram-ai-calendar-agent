@@ -7,11 +7,13 @@ Built with **n8n**, **Google Gemini**, and the **Google Calendar API**.
 ---
 ###  Project Screenshots
 
-### 📸 Project Screenshots
-
 1. 🔗 [Project Main Page Overview](assets/info.jpg)
 2. 🔗 [n8n Workflow Solution](assets/workflow.jpg)
 3. 🔗 [Telegram Bot Result](assets/2.jpeg.jpg)
+
+### n8n Workflow Configuration
+
+* 📥 [Download Telegram AI Calendar Agent JSON](assets/AI%20Calendar%20Assistant%20-%20View,%20Create%20%26%20Update%20Events%20(3).json)
 ##  Overview
 
 This project is an automated workflow (built in n8n) that connects **Telegram** to **Google Calendar** through an **AI Agent**. The agent understands natural language requests and decides which calendar action to perform — checking your schedule, adding a new event, or updating an existing one — then replies back to you on Telegram.
