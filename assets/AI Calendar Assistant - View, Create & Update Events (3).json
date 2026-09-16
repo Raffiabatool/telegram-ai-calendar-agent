@@ -1,0 +1,330 @@
+{
+  "name": "AI Calendar Assistant - View, Create & Update Events",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput ?? $json.body?.chatInput ?? $json.body?.message ?? $json.message ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId ?? $json.body?.sessionId ?? $json.body?.message ?? 'default' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a1b2c3d4-1111-4222-8333-444455556666",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput ?? '' }}",
+        "options": {
+          "systemMessage": "=# Role & Objective\nYou are a smart, friendly, and efficient AI Calendar Assistant. Your primary goal is to help users manage their calendar effortlessly by scheduling new meetings or updating existing ones.\n\n# Workflow & Instructions\n\n1. **Greet & Identify Intent:**\n   - Welcome the user warmly.\n   - Ask them clearly what they would like to do: \n     - \"Do you want to **schedule a new meeting** or **update an existing meeting**?\"\n   \n2. **Collect Required Details (Step-by-Step):**\n   - If the user wants to **Schedule a Meeting**, ask for the following details one by one (or all together if they prefer):\n     - **Title:** What is the meeting about?\n     - **Date & Time:** What date and time (start time and end time) should the meeting be scheduled for?\n     - **Attendees:** Who needs to be invited (email addresses)?\n     - **Calendar:** Which calendar should this be added to (e.g., primary)?\n\n   - If the user wants to **Update a Meeting**, ask for:\n     - The current title or keyword of the meeting to find it.\n     - What specific details they want to change (e.g., new time, new title, or new attendees).\n     - **Before updating, always use the \"Get Calendar Events\" tool first** to search for the meeting by the given title/keyword and locate its Event ID. If more than one matching event is found, list them with their date/time and ask the user to pick the right one. Only then call the \"Update Calendar Event\" tool, passing that Event ID together with the fields to change.\n\n3. **Confirmation:**\n   - Before executing the tool/action, always summarize the details back to the user and ask for confirmation:\n     > *\"Here are the details for your meeting: [Insert Details]. Shall I go ahead and schedule/update it?\"*\n\n4. **Execution:**\n   - Once the user confirms, trigger the appropriate calendar tool/action with the collected parameters.\n   - Confirm back to the user once the action is successfully completed.\n\n# Tone & Style\n- Be polite, clear, and concise. \n- Guide the user smoothly if they miss any required information."
+        }
+      },
+      "id": "9ec6f6a7-3787-4518-8ed9-92431e7d2c69",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        576,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.6-flash",
+        "options": {}
+      },
+      "id": "00d10369-af3b-43e5-9c47-436ddd70c55a",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        240
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "G6oD8e67az5lNdkI",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Normalize Input').item.json.sessionId }}"
+      },
+      "id": "70f193c1-0ac0-489e-9941-5a9dc36cfd4f",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        800,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "raffiabatool039@gmail.com",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $fromAI('after', 'Earliest date/time to search from, in ISO 8601 format') }}",
+          "timeMax": "={{ $fromAI('before', 'Latest date/time to search to, in ISO 8601 format') }}",
+          "singleEvents": true,
+          "query": "={{ $fromAI('query', 'Text to search for in the calendar, e.g. an event title. Leave empty if not needed') }}"
+        }
+      },
+      "id": "7a44ae83-b82e-4a8a-b9bf-00e59970682c",
+      "name": "Get Calendar Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        208
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "iTvSVRegCYxLI1J4",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "raffiabatool039@gmail.com",
+          "mode": "id"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Start date and time of the event, in ISO 8601 format`, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `End date and time of the event, in ISO 8601 format`, 'string') }}",
+        "additionalFields": {
+          "attendees": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', `Comma-separated list of attendee email addresses to invite. Leave empty if none were given`, 'string') }}",
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Description of the event. Leave empty if not given`, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Title of the event`, 'string') }}"
+        }
+      },
+      "id": "4a038217-bc73-4e53-be07-069eb23cacf6",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        1024,
+        208
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "iTvSVRegCYxLI1J4",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "raffiabatool039@gmail.com",
+          "mode": "id"
+        },
+        "eventId": "={{ $fromAI('Event_ID', 'The ID of the calendar event to update. Find this first by calling the Get Calendar Events tool and matching the title/keyword the user gave.', 'string') }}",
+        "updateFields": {
+          "description": "={{ $fromAI('Description', 'New description for the event. Leave empty if not changing', 'string') }}",
+          "end": "={{ $fromAI('End', 'New end date and time of the event, in ISO 8601 format. Leave empty if not changing', 'string') }}",
+          "start": "={{ $fromAI('Start', 'New start date and time of the event, in ISO 8601 format. Leave empty if not changing', 'string') }}",
+          "summary": "={{ $fromAI('Summary', 'New title for the event. Leave empty if the title is not changing', 'string') }}"
+        }
+      },
+      "id": "632a573f-ea04-4905-9579-a1832abcba2f",
+      "name": "Update Calendar Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        240
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "iTvSVRegCYxLI1J4",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        48,
+        128
+      ],
+      "id": "5c1d6433-9ef4-4b3f-901c-e1497497d1f2",
+      "name": "Telegram Trigger",
+      "webhookId": "824f08e3-ab2d-4ae1-819e-1e4e49679198",
+      "credentials": {
+        "telegramApi": {
+          "id": "8VMISzj3CiEssgaB",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        16
+      ],
+      "id": "0bf8e46c-ed6f-44e6-93e4-d166ac98a544",
+      "name": "Send a text message",
+      "webhookId": "8aebfb46-cf49-4cbc-b7ce-9b5d48d7534a",
+      "credentials": {
+        "telegramApi": {
+          "id": "8VMISzj3CiEssgaB",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Calendar Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Calendar Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Calendar Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5d4ff02a-7882-4311-934c-7909c2aaeae8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edbc4eaffa96a448f54ca7a11b560bc3d34d7b0e8f389f20d30e051bff096c31"
+  },
+  "nodeGroups": [],
+  "id": "KvgOILvMEAiJ26aQ",
+  "tags": []
+}
